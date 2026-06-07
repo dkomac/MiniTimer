@@ -17,8 +17,24 @@ final class SessionLogStoreTests: XCTestCase {
 
         XCTAssertEqual(
             line,
-            "[1970-01-01 00:00:00] elapsed=01:01:01 state=running focused=\"Safari\" bundleID=\"com.apple.Safari\""
+            "[1970-01-01 00:00:00] elapsed=01:01:01 state=running focused=\"Safari\" bundleID=\"com.apple.Safari\" - 1h 1m"
         )
+    }
+
+    func testFormatsHumanReadableDurationSuffixAtEnd() {
+        let snapshot = SessionSnapshot(
+            date: Date(timeIntervalSince1970: 0),
+            elapsedSeconds: 12_180,
+            state: .running,
+            focusedApp: nil
+        )
+
+        let line = SessionLogStore.format(
+            snapshot: snapshot,
+            timeZone: TimeZone(secondsFromGMT: 0)!
+        )
+
+        XCTAssertTrue(line.hasSuffix("- 3h 23m"))
     }
 
     func testFormattingEscapesQuotesInFocusedAppName() {

@@ -213,7 +213,9 @@ struct MiniTimerApp: App {
             }
         } label: {
             Text(controller.elapsedLabel)
+                .font(.system(.body, design: .monospaced))
                 .monospacedDigit()
+                .frame(width: 72, alignment: .leading)
         }
         .menuBarExtraStyle(.menu)
     }

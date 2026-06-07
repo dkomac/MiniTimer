@@ -80,10 +80,28 @@ public final class SessionLogStore {
 
         let timestamp = formatter.string(from: snapshot.date)
         let elapsed = DurationFormatting.string(from: snapshot.elapsedSeconds)
+        let readableElapsed = readableDuration(from: snapshot.elapsedSeconds)
         let focusedName = quote(snapshot.focusedApp?.localizedName ?? "unknown")
         let bundleIdentifier = quote(snapshot.focusedApp?.bundleIdentifier ?? "unknown")
 
-        return "[\(timestamp)] elapsed=\(elapsed) state=\(snapshot.state.rawValue) focused=\"\(focusedName)\" bundleID=\"\(bundleIdentifier)\""
+        return "[\(timestamp)] elapsed=\(elapsed) state=\(snapshot.state.rawValue) focused=\"\(focusedName)\" bundleID=\"\(bundleIdentifier)\" - \(readableElapsed)"
+    }
+
+    private static func readableDuration(from totalSeconds: Int) -> String {
+        let clampedSeconds = max(0, totalSeconds)
+        let hours = clampedSeconds / 3_600
+        let minutes = (clampedSeconds % 3_600) / 60
+        let seconds = clampedSeconds % 60
+
+        if hours > 0 {
+            return "\(hours)h \(minutes)m"
+        }
+
+        if minutes > 0 {
+            return "\(minutes)m"
+        }
+
+        return "\(seconds)s"
     }
 
     private static func quote(_ value: String) -> String {
