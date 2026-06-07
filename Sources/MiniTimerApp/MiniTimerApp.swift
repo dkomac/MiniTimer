@@ -26,6 +26,8 @@ final class MiniTimerController: ObservableObject {
         self.lastError = nil
 
         configureStorage()
+        timerStore.play()
+        syncPublishedState()
         startTicking()
     }
 
@@ -210,7 +212,8 @@ struct MiniTimerApp: App {
                 NSApplication.shared.terminate(nil)
             }
         } label: {
-            Label(controller.elapsedLabel, systemImage: "timer")
+            Text(controller.elapsedLabel)
+                .monospacedDigit()
         }
         .menuBarExtraStyle(.menu)
     }
